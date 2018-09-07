@@ -28,10 +28,10 @@ int main(void){
     	
 	//グレースケール入力 膨張処理 モルフォロジー処理　メディアンフィルタ
 	cvtColor(frame,hsv,CV_BGR2HSV);
-	inRange(hsv,Scalar(0,230,50),Scalar(40,255,255),src);
+	inRange(hsv,Scalar(0,230,40),Scalar(40,255,255),src);
 	morphologyEx(src, src, MORPH_CLOSE, Mat(), Point(-1, -1), 3);
 	medianBlur(src,src,1);
-    	dilate(src,src,Mat(),Point(-1,-1),3);
+    	dilate(src,src,Mat(),Point(-1,-1),4);
 
     	//ラべリング処理
     	Mat LabelImg;
@@ -74,8 +74,8 @@ int main(void){
         	int x = static_cast<int>(param[0]);
         	int y = static_cast<int>(param[1]);
 
-        	circle(Dst,cv::Point(x, y), 3, cv::Scalar(0, 0, 255), -1);
-		cout << "x:" << x << "  y:"<< y << endl;
+        	circle(Dst,cv::Point(x,y), 3, cv::Scalar(0, 0, 255), -1);
+		cout << i <<" "<< "x:" << x << "  y:"<< y << endl;
     	}
 
     	//面積値の出力
