@@ -44,13 +44,14 @@ int main(void){
 
 			//グレースケール入力 膨張処理 ガウシアンフィルタ（ぼかし）メディアンフィルタ
 			GaussianBlur(frame, frame, cv::Size(11,3), 80, 3);
-			cvtColor(frame,hsv, COLOR_BGR2GRAY);
-			inRange(hsv,Scalar(0,0,200),Scalar(200,255,255),src);
+			cvtColor(frame,hsv, COLOR_BGR2HSV);
+			inRange(hsv,Scalar(160,50,50),Scalar(180,255,255),src);
 			medianBlur(src,src,1);
-			dilate(src,src,Mat(),Point(-1,-1),9);
+			dilate(src,src,Mat(),Point(-1,-1),3);
 			erode(src,src,Mat(),Point(-1,-1),10);
 			dilate(src,src,Mat(),Point(-1,-1),5);
 			Mat neg = ~src;
+			neg = src;
 
 
 			//ラべリング処理
@@ -111,6 +112,12 @@ int main(void){
 				stringstream num;
 				num << i;
 				putText(Dst, num.str(), Point(x+5, y+20), FONT_HERSHEY_COMPLEX, 0.7, Scalar(0, 255, 255), 2);
+				if(centerY[i]>= 50){
+					cout<< "no" <<endl;
+				}else{
+					cout <<"stand"<<endl;
+				}
+
 			}
 
 			flag = true;
@@ -118,11 +125,12 @@ int main(void){
 			//imshow("frame",frame);
 			//imshow("Src", src);
 			//imshow("にゃーん", Dst);
+			//imwrite("a.jpeg",Dst);
+			//imwrite("b.jpeg",src);
+			//imwrite("c.jpeg",frame);
 			//waitKey();
-
-		}else if(
-
-
+		
+		}
 	}
 
 	return 0;
