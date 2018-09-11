@@ -16,9 +16,9 @@ int main(void){
 	Mat hsv;
 	Mat binary;
 	Mat src;
-	unsigned long int pre_t;
-	unsigned long int now_t;
-	unsigned long int diff_t;
+	time_t pre_t;
+	time_t now_t;
+	time_t diff_t;
 	bool flag = false;
 
 	VideoCapture cap(0);
@@ -31,12 +31,14 @@ int main(void){
 	}
 
 
-	pre_t = time_t();
+	pre_t = time(NULL);
 
 	while(true){
-		now_t = time_t();
+		
+		now_t = time(NULL);
 		diff_t = now_t - pre_t;
-		if(flag = false || diff_t >= 4000){
+
+		if(flag = false || diff_t >= 4){
 			cap >> frame;
 			imwrite("sample.jpeg", frame);
 
@@ -111,14 +113,16 @@ int main(void){
 				putText(Dst, num.str(), Point(x+5, y+20), FONT_HERSHEY_COMPLEX, 0.7, Scalar(0, 255, 255), 2);
 			}
 
-			flag = 1;
-			pre_t = pre_t + now_t;
-			imshow("frame",frame);
-			imshow("Src", src);
-			imshow("にゃーん", Dst);
-			waitKey();
+			flag = true;
+			pre_t = now_t;
+			//imshow("frame",frame);
+			//imshow("Src", src);
+			//imshow("にゃーん", Dst);
+			//waitKey();
 
-		}
+		}else if(
+
+
 	}
 
 	return 0;
