@@ -12,7 +12,7 @@ using namespace std;
 int main(void){
 
 
-	Mat frame = imread("cap.jpeg");
+	Mat frame;
 	Mat hsv;
 	Mat binary;
 	Mat src;
@@ -38,15 +38,15 @@ int main(void){
 		now_t = time(NULL);
 		diff_t = now_t - pre_t;
 
-		if(flag = false || diff_t >= 4){
+		if(flag = false || diff_t >= 1){
 			cap >> frame;
 			imwrite("sample.jpeg", frame);
 
-			//グレースケール入力 膨張処理 ガウシアンフィルタ（ぼかし）メディアンフィルタ
-			GaussianBlur(frame, frame, cv::Size(11,3), 80, 3);
+			//グレースケール入力 膨張処理 メディアンフィルタ
+			//GaussianBlur(frame, frame, cv::Size(11,3), 80, 3);//ガウシアンフィルタ（ぼかし）
 			cvtColor(frame,hsv, COLOR_BGR2HSV);
 			inRange(hsv,Scalar(160,50,50),Scalar(180,255,255),src);
-			medianBlur(src,src,1);
+			medianBlur(src,src,1);//メディアンフィルタ
 			dilate(src,src,Mat(),Point(-1,-1),3);
 			erode(src,src,Mat(),Point(-1,-1),10);
 			dilate(src,src,Mat(),Point(-1,-1),5);
@@ -58,7 +58,7 @@ int main(void){
 			Mat LabelImg;
 			Mat stats;
 			Mat centroids;
-			int nLab = connectedComponentsWithStats(neg, LabelImg, stats, centroids);
+			int nLab = connectedComponentsWithStats(neg, LabelImg, stats, centroids);//ラベリング画像、重心
 
 			// ラベリング結果の描画色を決定
 			vector<Vec3b> colors(nLab);
@@ -77,7 +77,7 @@ int main(void){
 				}	
 			}
 
-			//ROIの設定
+			//輪郭線の設定
 			for (int i = 1; i < nLab; ++i) {
 				int *param = stats.ptr<int>(i);
 
@@ -119,7 +119,20 @@ int main(void){
 				}
 
 			}
+			
+			vector<vector<Point> > contours;
+			findContours(src, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
+			double contour_len=0;
+			for(int i = 0; i < contours.size(); ++i) {
+				contour_len += arcLength(contours.at(i),0);
+			}
+			cout<<" Line Length = "<<contour_len/2<<endl;	if(centerY >= 390){
+				cout<< "stand" <<endl;
+			}else{
+				cout <<"no"<<endl;
+			}
 
+				
 			flag = true;
 			pre_t = now_t;
 			//imshow("frame",frame);
@@ -136,3 +149,18 @@ int main(void){
 	return 0;
 
 }	
+
+
+
+/*void BubbleSort(int array[],int n)
+{
+    int i,j,temp;
+
+    for (i = 0;i < n - 1;i++) {
+        for (j = 0;j < n - 1;j++) {
+            if (array[j + 1] < array[j]) {
+                temp = array[j];array[j] = array[j + 1];array[j + 1] = temp;
+            }
+        }
+    }
+}*/
