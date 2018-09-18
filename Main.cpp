@@ -27,7 +27,7 @@ int main(void){
     unsigned int f = 255;
 
 
-    VideoCapture cap(0);
+    VideoCapture cap("video.webm");
     if(!cap.isOpened()){
 
         cout <<"Not Opened"<< endl;
@@ -42,11 +42,11 @@ int main(void){
         Mat hsv;
         cap >> img;
         cap >> frame;
-        Mat rsi(img, Rect(100, 150, 500, 200));;
+        Mat rsi(img, Rect(120, 180, 500, 200));;
         resize(rsi,rsi, Size(1000, 400));
         imshow("img",rsi);
 
-        int key = waitKey(1);
+        int key = waitKey(250);
 
         if(key==113){//q
             a=a+5;
@@ -72,27 +72,27 @@ int main(void){
             f=f-5;
         }else if(key==108){//l
             f=f+3;
-        }else if(key==10){
+        }else if(key==122){
             break;
         }
 
         printf("(%d,%d,%d)\n",a,b,c);
         printf("(%d,%d,%d)\n",d,e,f);
-        erode(frame,frame,Mat(),Point(-1,-1),1);
-        dilate(frame,frame,Mat(),Point(-1,-1),3);
-        Mat dst(frame, Rect(100, 150, 500, 200));;
+        erode(frame,frame,Mat(),Point(-1,-1),3);
+        dilate(frame,frame,Mat(),Point(-1,-1),5);
+        Mat dst(frame, Rect(120, 180, 500, 200));;
         resize(dst, dst, Size(1000, 400));
         cvtColor(dst,hsv, COLOR_BGR2HSV);
         inRange(hsv,Scalar(a,b,c),Scalar(d,e,f),dst);
         imshow("binary img",dst);
-        waitKey(1);
+        waitKey(200);
     }
 
-    int ready = waitKey(1);
-
-    if(ready = 10){
+    //int ready = waitKey(1);
+    destroyAllWindows();
+    //if(ready = 10){
         cout << "Main Start" << endl;
-    }
+    //}
 
     pre_t = time(NULL);
 
@@ -100,7 +100,7 @@ int main(void){
 
         Mat mainframe;
         Mat mainhsv;
-        Mat maindst;
+        //Mat maindst;
 
         now_t = time(NULL);
         diff_t = now_t - pre_t;
@@ -109,10 +109,11 @@ int main(void){
             cap >> mainframe;
             erode(mainframe,mainframe,Mat(),Point(-1,-1),1);
             dilate(mainframe,mainframe,Mat(),Point(-1,-1),3);
-            Mat dst(mainframe, Rect(100, 150, 500, 200));;
+            Mat maindst(mainframe, Rect(120, 180, 500, 200));;
             resize(maindst, maindst, Size(1000, 400));
-            cvtColor(maindst,mainhsv, COLOR_BGR2GRAY);
+            cvtColor(maindst,mainhsv, COLOR_BGR2HSV);
             inRange(mainhsv,Scalar(a,b,c),Scalar(d,e,f),maindst);
+            waitKey(200);
             imshow("binary img",maindst);
 
 
@@ -159,10 +160,12 @@ int main(void){
                 centerX[i] = static_cast<int>(param[0]);
                 centerY[i] = static_cast<int>(param[1]);
 
-                circle(Dst,cv::Point(centerX[i],centerY[i]), 3, cv::Scalar(0, 0, 255), -1);
-                BubbleSort(centerX,nLab);
-                cout << i <<" "<< "x:" << centerX[i] << "  y:"<< centerY[i] << endl;
+                circle(Dst,cv::Point(centerX[i],centerY[i]), 3, cv::Scalar(0, 0, 255),-1);
             }
+            BubbleSort(centerX,nLab);//ループでソートしてるのでだめ
+
+            for(int count = 1;count < nLab;++count)
+                cout<< count <<" "<< "x:" << centerX[count] << "  y:"<< centerY[count] << endl;
 
             //面積値の出力
             for (int i = 1; i < nLab; ++i) {
@@ -179,10 +182,12 @@ int main(void){
 
             flag = true;
             pre_t = now_t;
-            //imshow("frame",frame);
+            printf("%d,%d,%d,%d,%d,%d\n",a,b,c,d,e,f);
+            imshow("frame",mainframe);
             //imshow("Src", src);
-            //imshow("にゃーん", Dst);
-            waitKey();
+            imshow("にゃーん", Dst);
+            waitKey(200);
+
 
         }
 
@@ -199,7 +204,9 @@ void BubbleSort(int array[],int n){
     for (i = 0;i < n - 1;i++) {
         for (j = 0;j < n - 1;j++) {
            if (array[j + 1] < array[j]) {
-                temp = array[j];array[j] = array[j + 1];array[j + 1] = temp;
+                temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
             }
         }
     }
