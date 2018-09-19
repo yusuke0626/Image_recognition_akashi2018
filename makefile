@@ -1,3 +1,3 @@
-cap: Main.cpp
-	g++ Main.cpp -o cap `pkg-config --cflags opencv` `pkg-config --libs opencv`
+Main: Main.cpp
+	g++ Main.cpp -o Main `pkg-config --cflags opencv` `pkg-config --libs opencv`
 

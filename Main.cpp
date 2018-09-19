@@ -42,7 +42,7 @@ int main(void){
         Mat hsv;
         cap >> img;
         cap >> frame;
-        Mat rsi(img, Rect(120, 180, 500, 200));;
+        Mat rsi(img, Rect(120, 190, 500, 200));;
         resize(rsi,rsi, Size(1000, 400));
         imshow("img",rsi);
 
@@ -78,17 +78,17 @@ int main(void){
 
         printf("(%d,%d,%d)\n",a,b,c);
         printf("(%d,%d,%d)\n",d,e,f);
-        erode(frame,frame,Mat(),Point(-1,-1),3);
-        dilate(frame,frame,Mat(),Point(-1,-1),5);
-        Mat dst(frame, Rect(120, 180, 500, 200));;
+        Mat dst(frame, Rect(120, 190, 500, 200));;
         resize(dst, dst, Size(1000, 400));
         cvtColor(dst,hsv, COLOR_BGR2HSV);
-        inRange(hsv,Scalar(a,b,c),Scalar(d,e,f),dst);
-        imshow("binary img",dst);
+        inRange(hsv,Scalar(a,b,c),Scalar(d,e,f),frame);
+        erode(frame,frame,Mat(),Point(-1,-1),3);
+        dilate(frame,frame,Mat(),Point(-1,-1),5);
+        imshow("binary img",frame);
         waitKey(200);
     }
 
-    //int ready = waitKey(1);
+    //int ready = waitKey(1)
     destroyAllWindows();
     //if(ready = 10){
         cout << "Main Start" << endl;
@@ -101,20 +101,25 @@ int main(void){
         Mat mainframe;
         Mat mainhsv;
         //Mat maindst;
+        int stopkey = waitKey(200);
+
+        if(stopkey == 97)
+            break;
 
         now_t = time(NULL);
         diff_t = now_t - pre_t;
 
         if(flag = false || diff_t >= 4){
             cap >> mainframe;
-            erode(mainframe,mainframe,Mat(),Point(-1,-1),1);
-            dilate(mainframe,mainframe,Mat(),Point(-1,-1),3);
-            Mat maindst(mainframe, Rect(120, 180, 500, 200));;
+            Mat maindst(mainframe, Rect(120, 190, 500, 200));;
             resize(maindst, maindst, Size(1000, 400));
             cvtColor(maindst,mainhsv, COLOR_BGR2HSV);
             inRange(mainhsv,Scalar(a,b,c),Scalar(d,e,f),maindst);
+            erode(maindst,maindst,Mat(),Point(-1,-1),3);
+            dilate(maindst,maindst,Mat(),Point(-1,-1),5);
             waitKey(200);
-            imshow("binary img",maindst);
+            imshow("img",mainhsv);
+            //imshow("binary img",maindst);
 
 
             //ラべリング処理
@@ -183,7 +188,7 @@ int main(void){
             flag = true;
             pre_t = now_t;
             printf("%d,%d,%d,%d,%d,%d\n",a,b,c,d,e,f);
-            imshow("frame",mainframe);
+            //imshow("frame",mainframe);
             //imshow("Src", src);
             imshow("にゃーん", Dst);
             waitKey(200);
@@ -192,7 +197,7 @@ int main(void){
         }
 
     }
-
+    cout << "Main finish" << endl;
     return 0;
 
 }
