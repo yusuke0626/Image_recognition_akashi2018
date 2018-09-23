@@ -3,7 +3,6 @@
 #include<vector>
 #include<random>
 #include<sstream>
-#include<cstdlib>
 #include<ctime>
 #include<opencv2/opencv.hpp>
 
@@ -47,32 +46,39 @@ int main(void){
         imshow("img",rsi);
 
         int key = waitKey(250);
+        bool swflag = false;
 
-        if(key==113){//q
-            a=a+5;
-        }else if(key==97){//a
-            a=a-3;
-        }else if(key==119){//w
-            b=b+5;
-        }else if(key==115){//s
-            b=b-3;
-        }else if(key==101){//e
-            c=c+5;
-        }else if(key==100){//d
-            c=c-3;
-        }else if(key==117){//u
-            d=d-5;
-        }else if(key==106){//j
-            d=d+3;
-        }else if(key==105){//i
-            e=e-5;
-        }else if(key==107){//k
-            e=e+3;
-        }else if(key==111){//o
-            f=f-5;
-        }else if(key==108){//l
-            f=f+3;
-        }else if(key==122){
+        switch (key){
+            case 113:
+                a = a + 5; break;
+            case 97:
+                a = a - 3; break;
+            case 119:
+                b = b + 5; break;
+            case 115:
+                b = b - 3; break;
+            case 101:
+                c = c + 5; break;
+            case 100:
+                c = c - 3; break;
+            case 117:
+                d = d - 5; break;
+            case 106:
+                d = d + 3; break;
+            case 105:
+                e = e - 5; break;
+            case 107:
+                e = e + 3; break;
+            case 111:
+                f = f - 5; break;
+            case 108:
+                f = f + 3; break;
+            case 122:
+                swflag = true; break;
+        }
+
+
+        if(swflag == true){
             break;
         }
 
@@ -91,7 +97,7 @@ int main(void){
     //int ready = waitKey(1)
     destroyAllWindows();
     //if(ready = 10){
-        cout << "Main Start" << endl;
+        cout << "*---------Main Start---------*" << endl;
     //}
 
     pre_t = time(NULL);
@@ -165,9 +171,9 @@ int main(void){
                 centerX[i] = static_cast<int>(param[0]);
                 centerY[i] = static_cast<int>(param[1]);
 
-                circle(Dst,cv::Point(centerX[i],centerY[i]), 3, cv::Scalar(0, 0, 255),-1);
+                circle(Dst,Point(centerX[i],centerY[i]), 3, Scalar(0, 0, 255),-1);
             }
-            BubbleSort(centerX,nLab);//ループでソートしてるのでだめ
+            BubbleSort(centerX,nLab);
 
             for(int count = 1;count < nLab;++count)
                 cout<< count <<" "<< "x:" << centerX[count] << "  y:"<< centerY[count] << endl;
@@ -178,8 +184,8 @@ int main(void){
                 cout << "area "<< i <<" = " << param[ConnectedComponentsTypes::CC_STAT_AREA] << endl;
 
                 //ROIの左上に番号を書き込む
-                int x = param[cv::ConnectedComponentsTypes::CC_STAT_LEFT];
-                int y = param[cv::ConnectedComponentsTypes::CC_STAT_TOP];
+                int x = param[ConnectedComponentsTypes::CC_STAT_LEFT];
+                int y = param[ConnectedComponentsTypes::CC_STAT_TOP];
                 stringstream num;
                 num << i;
                 putText(Dst, num.str(), Point(x+5, y+20), FONT_HERSHEY_COMPLEX, 0.7, Scalar(0, 255, 255), 2);
@@ -197,7 +203,7 @@ int main(void){
         }
 
     }
-    cout << "Main finish" << endl;
+    cout << "*----------Main finish-----------*" << endl;
     return 0;
 
 }
