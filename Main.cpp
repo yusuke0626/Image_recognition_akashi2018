@@ -6,6 +6,13 @@
 #include<ctime>
 #include<opencv2/opencv.hpp>
 
+#define X_ORIGIN 130
+#define Y_ORIGIN 50
+#define X_SIZE 120
+#define Y_SIZE 400
+#define FRAME_X_SIZE 135
+#define FRAME_Y_SIZE 400
+
 using namespace cv;
 using namespace std;
 
@@ -41,8 +48,8 @@ int main(void){
         Mat hsv;
         cap >> img;
         cap >> frame;
-        Mat rsi(img, Rect(120, 190, 500, 200));;
-        resize(rsi,rsi, Size(1000, 400));
+        Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));;
+        resize(rsi,rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         imshow("img",rsi);
 
         int key = waitKey(250);
@@ -84,8 +91,8 @@ int main(void){
 
         printf("(%d,%d,%d)\n",a,b,c);
         printf("(%d,%d,%d)\n",d,e,f);
-        Mat dst(frame, Rect(120, 190, 500, 200));;
-        resize(dst, dst, Size(1000, 400));
+        Mat dst(frame, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));;
+        resize(dst, dst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         cvtColor(dst,hsv, COLOR_BGR2HSV);
         inRange(hsv,Scalar(a,b,c),Scalar(d,e,f),frame);
         erode(frame,frame,Mat(),Point(-1,-1),3);
@@ -117,8 +124,8 @@ int main(void){
 
         if(flag = false || diff_t >= 4){
             cap >> mainframe;
-            Mat maindst(mainframe, Rect(120, 190, 500, 200));;
-            resize(maindst, maindst, Size(1000, 400));
+            Mat maindst(mainframe, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));;
+            resize(maindst, maindst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
             cvtColor(maindst,mainhsv, COLOR_BGR2HSV);
             inRange(mainhsv,Scalar(a,b,c),Scalar(d,e,f),maindst);
             erode(maindst,maindst,Mat(),Point(-1,-1),3);
@@ -173,10 +180,9 @@ int main(void){
 
                 circle(Dst,Point(centerX[i],centerY[i]), 3, Scalar(0, 0, 255),-1);
             }
-            BubbleSort(centerX,nLab);
 
             for(int count = 1;count < nLab;++count)
-                cout<< count <<" "<< "x:" << centerX[count] << "  y:"<< centerY[count] << endl;
+                cout<< count <<" "<< "x:" << centerY[count] << "  y:"<< centerX[count] << endl;
 
             //面積値の出力
             for (int i = 1; i < nLab; ++i) {
@@ -209,18 +215,5 @@ int main(void){
 }
 
 
-void BubbleSort(int array[],int n){
-    int i,j,temp;
-
-    for (i = 0;i < n - 1;i++) {
-        for (j = 0;j < n - 1;j++) {
-           if (array[j + 1] < array[j]) {
-                temp = array[j];
-                array[j] = array[j + 1];
-                array[j + 1] = temp;
-            }
-        }
-    }
-}
 
 
