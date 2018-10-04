@@ -27,13 +27,13 @@ int readFile(string readfilename){
         return -1;
     }
     int a[5];
+    int i = 0;
     while (getline(servefile,tabledata)) {
-        int i = 0;
         ++i;
         //cout << tabledata << endl;
 	const char* num = tabledata.c_str();
         a[i] = atoi(num);
-        cout << a[i] << endl;
+        cout << i << ":" <<a[i] << endl;
     }
     return 0;
 }
