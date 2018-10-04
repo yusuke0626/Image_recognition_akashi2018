@@ -8,7 +8,6 @@ using namespace std;
 void AccessPointConnect(void){
     system("ssh pi@akashiaspoint.local");
     system("AkashiRoboB");
-    return 0;
 }
 
 void sendFile(string filename){
@@ -17,7 +16,6 @@ void sendFile(string filename){
     string putcommand = scp + filename + adr;
     const char* cstr = putcommand.c_str();
     system(cstr);
-    return 0;
 }
 
 int readFile(string readfilename){
