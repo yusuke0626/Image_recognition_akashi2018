@@ -11,8 +11,8 @@
 #define Y_ORIGIN 0
 #define X_SIZE 200
 #define Y_SIZE 460
-#define FRAME_X_SIZE 200
-#define FRAME_Y_SIZE 460
+#define FRAME_X_SIZE 400
+#define FRAME_Y_SIZE 920
 
 using namespace cv;
 using namespace std;
@@ -31,7 +31,7 @@ int main(void) {
     unsigned int e = 255;
     unsigned int f = 255;
 
-    VideoCapture cap("video.webm");
+    VideoCapture cap(1);
     if (!cap.isOpened()) {
         cout << "Not Opened" << endl;
         return -1;
@@ -45,7 +45,8 @@ int main(void) {
         Mat hsv;
         cap >> img;
         cap >> frame;
-        Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));;
+        Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
+        cv::line(rsi, cv::Point(0, 230), cv::Point(400, 230), cv::Scalar(200,100,100), 5, CV_AA);
         resize(rsi, rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         imshow("img", rsi);
 
