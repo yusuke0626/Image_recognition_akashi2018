@@ -46,7 +46,7 @@ int main(void) {
         cap >> img;
         cap >> frame;
         Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
-        cv::line(rsi, cv::Point(0, 230), cv::Point(400, 230), cv::Scalar(200,100,100), 5, CV_AA);
+        line(rsi, Point(0, 230), Point(400, 230), Scalar(200,100,100), 5, CV_AA);
         resize(rsi, rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         imshow("img", rsi);
 
