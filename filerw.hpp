@@ -7,11 +7,18 @@
 
 using namespace std;
 
-namespace TD{
-    void Connect(void){
-        system("ssh pi@akashiaspoint.local");
-        system("AkashiRoboB");
+namespace FRW{
+
+    void write(string filename,int tabledata[3]){
+        ofstream txt(filename);
+        int i = 0;
+        while(i < 3){
+            txt << tabledata[i] << "\n";
+            ++i;
+        }
+        txt.close();
     }
+
 
     void send(string filename){
         string scp("sshpass -p 'a' scp ");
@@ -37,9 +44,10 @@ namespace TD{
             const char* num = tabledata.c_str();
             TablePlace[i] = atoi(num);
             sendPlace[i] = TablePlace[i];
-            cout << i << ":" <<TablePlace[i] << endl;//TablePlaceは関数外からも使用可能
+            //cout << i << ":" <<TablePlace[i] << endl;
             i = i+1;
         }
+        servefile.close();
         return 0;
     }
 
