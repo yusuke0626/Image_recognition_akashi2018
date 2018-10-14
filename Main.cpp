@@ -123,7 +123,7 @@ int main(void) {
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
             dilate(maindst, maindst, Mat(), Point(-1, -1), 5);
             waitKey(200);
-            imshow("img", mainhsv);
+            //imshow("img", mainhsv);
 
             //ラべリング
             Mat LabelImg;
@@ -157,8 +157,8 @@ int main(void) {
                 circle(Dst, Point(centerX[i], centerY[i]), 3, Scalar(0, 0, 255), -1);
             }
 
-            int tableXpoint[3] = {0,0,0};
-            int tableYpoint[3] = {0,0,0};
+            int tableXpoint[nLab] = {};
+            int tableYpoint[nLab] = {};
             int tdata = 0;
             //座標
             for (int i = 1; i < nLab; ++i){
@@ -174,7 +174,7 @@ int main(void) {
                     stringstream num;
                     num << tdata;
                     putText(Dst, num.str(), Point(tableXpoint[tdata] + 5,tableYpoint[tdata] + 20), FONT_HERSHEY_COMPLEX,0.7, Scalar(0, 255, 255), 2);
-                    cout << tdata<< " "<< "x:" << tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
+                    cout << tdata<< " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
                     tdata = tdata + 1;
                 }
             }
@@ -182,7 +182,7 @@ int main(void) {
             //FRW::send("tabledata.txt");
             flag = false;//true;
             //pre_t = now_t;
-            printf("%d,%d,%d,%d,%d,%d\n", a, b, c, d, e, f);
+           // printf("%d,%d,%d,%d,%d,%d\n", a, b, c, d, e, f);
             //imshow("にゃーん", Dst);
             waitKey(1000);
             imwrite("a.jpeg",Dst);
