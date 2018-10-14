@@ -31,7 +31,7 @@ int main(void) {
     unsigned int e = 255;
     unsigned int f = 255;
 
-    VideoCapture cap(1);
+    VideoCapture cap(0);
     if (!cap.isOpened()) {
         cout << "Not Opened" << endl;
         return -1;
@@ -114,7 +114,7 @@ int main(void) {
         now_t = time(NULL);
         diff_t = now_t - pre_t;
 
-        if (flag = false || diff_t >= 8) {
+        if (flag = false || diff_t >= 1) {
             cap >> mainframe;
             Mat maindst(mainframe, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
             resize(maindst, maindst, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
@@ -146,19 +146,11 @@ int main(void) {
                     pix[j] = colors[lb[j]];
                 }
             }
-            // ROIの設定
-            for (int i = 1; i < nLab; ++i) {
-                int *param = stats.ptr<int>(i);
-                int x = param[ConnectedComponentsTypes::CC_STAT_LEFT];
-                int y = param[ConnectedComponentsTypes::CC_STAT_TOP];
-                int height = param[ConnectedComponentsTypes::CC_STAT_HEIGHT];
-                int width = param[ConnectedComponentsTypes::CC_STAT_WIDTH];
-                rectangle(Dst, Rect(x, y, width, height), Scalar(0, 255, 0), 2);
-            }
+
             //重心計算
             int centerX[nLab];
             int centerY[nLab];
-            for (int i = 1; i < nLab; ++i) {
+            for (int i = 1; i < nLab; ++i){
                 double *param = centroids.ptr<double>(i);
                 centerX[i] = static_cast<int>(param[0]);
                 centerY[i] = static_cast<int>(param[1]);
@@ -167,25 +159,33 @@ int main(void) {
 
             int tableXpoint[3] = {0,0,0};
             int tableYpoint[3] = {0,0,0};
-            for (int count = 1; count < 2/*nLab*/; ++count)
-                //座標
-                for (int i = 1; i < nLab; ++i) {
-                    int *param = stats.ptr<int>(i);
-                    // 左上に番号を書き込む
-                    tableXpoint[i-1] = param[ConnectedComponentsTypes::CC_STAT_LEFT];
-                    tableYpoint[i-1] = param[ConnectedComponentsTypes::CC_STAT_TOP];
+            int tdata = 0;
+            //座標
+            for (int i = 1; i < nLab; ++i){
+                int *param = stats.ptr<int>(i);
+                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > 1000){
+                    int x = param[ConnectedComponentsTypes::CC_STAT_LEFT];
+                    int y = param[ConnectedComponentsTypes::CC_STAT_TOP];
+                    int height = param[ConnectedComponentsTypes::CC_STAT_HEIGHT];
+                    int width = param[ConnectedComponentsTypes::CC_STAT_WIDTH];
+                    rectangle(Dst, Rect(x, y, width, height), Scalar(0, 255, 0), 2);
+                    tableXpoint[tdata] = param[ConnectedComponentsTypes::CC_STAT_LEFT];
+                    tableYpoint[tdata] = param[ConnectedComponentsTypes::CC_STAT_TOP];
                     stringstream num;
-                    num << i;
-                    putText(Dst, num.str(), Point(tableXpoint[i-1] + 5,tableYpoint[i-1] + 20), FONT_HERSHEY_COMPLEX,0.7, Scalar(0, 255, 255), 2);
-                    cout << i << " "<< "x:" << tableXpoint[i-1] << "  y:" << tableYpoint[i-1] << endl;
+                    num << tdata;
+                    putText(Dst, num.str(), Point(tableXpoint[tdata] + 5,tableYpoint[tdata] + 20), FONT_HERSHEY_COMPLEX,0.7, Scalar(0, 255, 255), 2);
+                    cout << tdata<< " "<< "x:" << tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
+                    tdata = tdata + 1;
                 }
+            }
             FRW::write("tabledata.txt",tableXpoint);
-            FRW::send("tabledata.txt");
+            //FRW::send("tabledata.txt");
             flag = false;//true;
             //pre_t = now_t;
             printf("%d,%d,%d,%d,%d,%d\n", a, b, c, d, e, f);
             //imshow("にゃーん", Dst);
             waitKey(1000);
+            imwrite("a.jpeg",Dst);
             break;
         }
     }
