@@ -160,6 +160,7 @@ int main(void) {
             int tableXpoint[nLab] = {};
             int tableYpoint[nLab] = {};
             int tdata = 0;
+            int areacounter = 0;
             //座標
             for (int i = 1; i < nLab; ++i){
                 int *param = stats.ptr<int>(i);
@@ -176,10 +177,16 @@ int main(void) {
                     putText(Dst, num.str(), Point(tableXpoint[tdata] + 5,tableYpoint[tdata] + 20), FONT_HERSHEY_COMPLEX,0.7, Scalar(0, 255, 255), 2);
                     cout << tdata<< " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
                     tdata = tdata + 1;
+
+                    areacounter = areacounter + 1;
+
+                    if(areacounter > 4){
+                        cout << "ノイズあり" << endl;
+                    }
                 }
             }
             FRW::write("tabledata.txt",tableXpoint);
-            //FRW::send("tabledata.txt");
+            FRW::send("tabledata.txt");
             flag = false;//true;
             //pre_t = now_t;
            // printf("%d,%d,%d,%d,%d,%d\n", a, b, c, d, e, f);
