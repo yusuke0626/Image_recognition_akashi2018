@@ -7,11 +7,12 @@
 #include <vector>
 #include "filerw.hpp"
 
+#define GET_RANGE 1000
 #define X_ORIGIN 80
 #define Y_ORIGIN 0
-#define X_SIZE 200
+#define X_SIZE 250
 #define Y_SIZE 460
-#define FRAME_X_SIZE 400
+#define FRAME_X_SIZE 500
 #define FRAME_Y_SIZE 920
 
 using namespace cv;
@@ -22,6 +23,7 @@ int main(void) {
     time_t pre_t;
     time_t now_t;
     time_t diff_t;
+    bool range_flag = false;
     bool flag = false;
 
     unsigned int a = 0;
@@ -31,7 +33,7 @@ int main(void) {
     unsigned int e = 255;
     unsigned int f = 255;
 
-    VideoCapture cap(0);
+    VideoCapture cap(1);
     if (!cap.isOpened()) {
         cout << "Not Opened" << endl;
         return -1;
@@ -50,7 +52,7 @@ int main(void) {
         resize(rsi, rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         imshow("img", rsi);
 
-        int key = waitKey(250);
+        int key = waitKey(50);
         bool swflag = false;
 
         switch (key) {
@@ -94,7 +96,7 @@ int main(void) {
         erode(frame, frame, Mat(), Point(-1, -1), 3);
         dilate(frame, frame, Mat(), Point(-1, -1), 5);
         imshow("binary img", frame);
-        waitKey(200);
+        //waitKey(50);
     }
 
     destroyAllWindows();
@@ -106,7 +108,7 @@ int main(void) {
 
         Mat mainframe;
         Mat mainhsv;
-        int stopkey = waitKey(1000);
+        int stopkey = waitKey(1);
 
         if (stopkey == 97)
             break;
@@ -122,7 +124,7 @@ int main(void) {
             inRange(mainhsv, Scalar(a, b, c), Scalar(d, e, f), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
             dilate(maindst, maindst, Mat(), Point(-1, -1), 5);
-            waitKey(200);
+            //waitKey(200);
             //imshow("img", mainhsv);
 
             //ラべリング
@@ -160,11 +162,10 @@ int main(void) {
             int tableXpoint[nLab] = {};
             int tableYpoint[nLab] = {};
             int tdata = 0;
-            int areacounter = 0;
             //座標
             for (int i = 1; i < nLab; ++i){
                 int *param = stats.ptr<int>(i);
-                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > 1000){
+                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > GET_RANGE){
                     int x = param[ConnectedComponentsTypes::CC_STAT_LEFT];
                     int y = param[ConnectedComponentsTypes::CC_STAT_TOP];
                     int height = param[ConnectedComponentsTypes::CC_STAT_HEIGHT];
@@ -178,22 +179,23 @@ int main(void) {
                     cout << tdata<< " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
                     tdata = tdata + 1;
 
-                    areacounter = areacounter + 1;
-
-                    if(areacounter > 4){
-                        cout << "ノイズあり" << endl;
+                    if(tdata > 3){
+                        cout << "Warning!!: This data has noise " << endl;
+                        range_flag = true;
                     }
                 }
             }
-            FRW::write("tabledata.txt",tableXpoint);
-            FRW::send("tabledata.txt");
-            flag = false;//true;
+            if(range_flag == false){
+                FRW::write("tabledata.txt",tableXpoint);
+                //FRW::send("tabledata.txt");
+                cout << "Success!!" << endl;
+                flag = false;//true;
+            }
             //pre_t = now_t;
-           // printf("%d,%d,%d,%d,%d,%d\n", a, b, c, d, e, f);
-            //imshow("にゃーん", Dst);
-            waitKey(1000);
+            imshow("にゃーん", Dst);
+            //waitKey(1000);
             imwrite("a.jpeg",Dst);
-            break;
+            //break;
         }
     }
     cout << "*----------Main finish-----------*" << endl;
