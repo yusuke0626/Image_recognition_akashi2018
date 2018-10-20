@@ -7,7 +7,7 @@
 #include <vector>
 #include "filerw.hpp"
 
-#define GET_RANGE 1000
+#define GET_RANGE 6000
 #define X_ORIGIN 80
 #define Y_ORIGIN 0
 #define X_SIZE 250
@@ -26,17 +26,17 @@ int main(void) {
     bool range_flag = false;
     bool flag = false;
 
-    unsigned int a = 0;
-    unsigned int b = 0;
-    unsigned int c = 0;
-    unsigned int d = 255;
+    unsigned int a = 10;
+    unsigned int b = 100;
+    unsigned int c = 100;
+    unsigned int d = 40;
     unsigned int e = 255;
     unsigned int f = 255;
 
     int av_count = 0;
-    long int average_A = 0;
-    long int average_B = 0;
-    long int average_C = 0;
+    long int sum_A = 0;
+    long int sum_B = 0;
+    long int sum_C = 0;
     int average[3] = {};
 
     VideoCapture cap(1);
@@ -100,7 +100,7 @@ int main(void) {
         cvtColor(dst, hsv, COLOR_BGR2HSV);
         inRange(hsv, Scalar(a, b, c), Scalar(d, e, f), frame);
         erode(frame, frame, Mat(), Point(-1, -1), 3);
-        dilate(frame, frame, Mat(), Point(-1, -1), 5);
+        dilate(frame, frame, Mat(), Point(-1, -1), 7);
         imshow("binary img", frame);
         //waitKey(50);
     }
@@ -129,7 +129,7 @@ int main(void) {
             cvtColor(maindst, mainhsv, COLOR_BGR2HSV);
             inRange(mainhsv, Scalar(a, b, c), Scalar(d, e, f), maindst);
             erode(maindst, maindst, Mat(), Point(-1, -1), 3);
-            dilate(maindst, maindst, Mat(), Point(-1, -1), 5);
+            dilate(maindst, maindst, Mat(), Point(-1, -1), 7);
             //waitKey(200);
             //imshow("img", mainhsv);
 
@@ -182,25 +182,29 @@ int main(void) {
                     stringstream num;
                     num << tdata;
                     putText(Dst, num.str(), Point(tableXpoint[tdata] + 5,tableYpoint[tdata] + 20), FONT_HERSHEY_COMPLEX,0.7, Scalar(0, 255, 255), 2);
-                    cout << tdata<< " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
+                    //cout << tdata<< " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
 
-
-                    if(tdata > 3){
+                    //tdata = tdata + 1;
+                    if(tdata > 2){
                         cout << "Warning!!: This data has noises " << endl;
                         range_flag = true;
                     }else{
-                        average_A = average_A + tableXpoint[0];
-                        average_B = average_B + tableXpoint[1];
-                        average_C = average_C + tableXpoint[2];
+                        cout << tdata << " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
                         av_count = av_count + 1;
+                        range_flag = false;
                     }
                     tdata = tdata + 1;
                 }
             }
-            if(range_flag == false && av_count > 50){
-                average[0] = average_A / av_count;
-                average[1] = average_B / av_count;
-                average[2] = average_C / av_count;
+
+            sum_A = sum_A + tableXpoint[0];
+            sum_B = sum_B + tableXpoint[1];
+            sum_C = sum_C + tableXpoint[2];
+
+            if(range_flag == false && av_count > 60){
+                average[0] = sum_A / (av_count / 3);
+                average[1] = sum_B / (av_count / 3);
+                average[2] = sum_C / (av_count / 3);
 
                 FRW::write("average.txt",average);
                 FRW::write("tabledata.txt",tableXpoint);
@@ -209,11 +213,7 @@ int main(void) {
                 flag = false;//true;
                 break;
             }
-            //pre_t = now_t;
             imshow("にゃーん", Dst);
-            //waitKey(1000);
-            imwrite("a.jpeg",Dst);
-            //break;
         }
     }
     cout << "*----------Main finish-----------*" << endl;
