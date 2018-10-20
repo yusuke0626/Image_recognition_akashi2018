@@ -207,8 +207,8 @@ int main(void) {
                 average[2] = sum_C / (av_count / 3);
 
                 FRW::write("average.txt",average);
-                FRW::write("tabledata.txt",tableXpoint);
-                //FRW::send("tabledata.txt");
+                //FRW::write("tabledata.txt",tableXpoint);
+                FRW::send("average.txt");
                 cout << "Success!!" << endl;
                 flag = false;//true;
                 break;
