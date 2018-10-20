@@ -33,15 +33,21 @@ int main(void) {
     unsigned int e = 255;
     unsigned int f = 255;
 
+    int av_count = 0;
+    long int average_A = 0;
+    long int average_B = 0;
+    long int average_C = 0;
+    int average[3] = {};
+
     VideoCapture cap(1);
-    if (!cap.isOpened()) {
+    if(!cap.isOpened()){
         cout << "Not Opened" << endl;
         return -1;
-    } else {
+    }else{
         cout << "Open Successful" << endl;
     }
 
-    while (true) {
+    while(true){
         Mat img;
         Mat frame;
         Mat hsv;
@@ -84,7 +90,7 @@ int main(void) {
                 swflag = true;break;
         }
 
-        if (swflag == true){
+        if(swflag == true){
             break;
         }
         printf("(%d,%d,%d)\n", a, b, c);
@@ -165,7 +171,7 @@ int main(void) {
             //座標
             for (int i = 1; i < nLab; ++i){
                 int *param = stats.ptr<int>(i);
-                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > GET_RANGE){
+                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > GET_RANGE || param[ConnectedComponentsTypes::CC_STAT_LEFT] <=1000){
                     int x = param[ConnectedComponentsTypes::CC_STAT_LEFT];
                     int y = param[ConnectedComponentsTypes::CC_STAT_TOP];
                     int height = param[ConnectedComponentsTypes::CC_STAT_HEIGHT];
@@ -177,19 +183,31 @@ int main(void) {
                     num << tdata;
                     putText(Dst, num.str(), Point(tableXpoint[tdata] + 5,tableYpoint[tdata] + 20), FONT_HERSHEY_COMPLEX,0.7, Scalar(0, 255, 255), 2);
                     cout << tdata<< " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
-                    tdata = tdata + 1;
+
 
                     if(tdata > 3){
-                        cout << "Warning!!: This data has noise " << endl;
+                        cout << "Warning!!: This data has noises " << endl;
                         range_flag = true;
+                    }else{
+                        average_A = average_A + tableXpoint[0];
+                        average_B = average_B + tableXpoint[1];
+                        average_C = average_C + tableXpoint[2];
+                        av_count = av_count + 1;
                     }
+                    tdata = tdata + 1;
                 }
             }
-            if(range_flag == false){
+            if(range_flag == false && av_count > 50){
+                average[0] = average_A / av_count;
+                average[1] = average_B / av_count;
+                average[2] = average_C / av_count;
+
+                FRW::write("average.txt",average);
                 FRW::write("tabledata.txt",tableXpoint);
                 //FRW::send("tabledata.txt");
                 cout << "Success!!" << endl;
                 flag = false;//true;
+                break;
             }
             //pre_t = now_t;
             imshow("にゃーん", Dst);
