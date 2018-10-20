@@ -7,7 +7,7 @@
 #include <vector>
 #include "filerw.hpp"
 
-#define GET_RANGE 6000
+#define GET_RANGE 1000
 #define X_ORIGIN 80
 #define Y_ORIGIN 0
 #define X_SIZE 250
@@ -26,28 +26,22 @@ int main(void) {
     bool range_flag = false;
     bool flag = false;
 
-    unsigned int a = 10;
-    unsigned int b = 100;
-    unsigned int c = 100;
-    unsigned int d = 40;
+    unsigned int a = 0;
+    unsigned int b = 0;
+    unsigned int c = 0;
+    unsigned int d = 255;
     unsigned int e = 255;
     unsigned int f = 255;
 
-    int av_count = 0;
-    long int sum_A = 0;
-    long int sum_B = 0;
-    long int sum_C = 0;
-    int average[3] = {};
-
     VideoCapture cap(1);
-    if(!cap.isOpened()){
+    if (!cap.isOpened()) {
         cout << "Not Opened" << endl;
         return -1;
-    }else{
+    } else {
         cout << "Open Successful" << endl;
     }
 
-    while(true){
+    while (true) {
         Mat img;
         Mat frame;
         Mat hsv;
@@ -90,7 +84,7 @@ int main(void) {
                 swflag = true;break;
         }
 
-        if(swflag == true){
+        if (swflag == true){
             break;
         }
         printf("(%d,%d,%d)\n", a, b, c);
@@ -171,7 +165,7 @@ int main(void) {
             //座標
             for (int i = 1; i < nLab; ++i){
                 int *param = stats.ptr<int>(i);
-                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > GET_RANGE || param[ConnectedComponentsTypes::CC_STAT_LEFT] <=1000){
+                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > GET_RANGE){
                     int x = param[ConnectedComponentsTypes::CC_STAT_LEFT];
                     int y = param[ConnectedComponentsTypes::CC_STAT_TOP];
                     int height = param[ConnectedComponentsTypes::CC_STAT_HEIGHT];
@@ -182,43 +176,29 @@ int main(void) {
                     stringstream num;
                     num << tdata;
                     putText(Dst, num.str(), Point(tableXpoint[tdata] + 5,tableYpoint[tdata] + 20), FONT_HERSHEY_COMPLEX,0.7, Scalar(0, 255, 255), 2);
-                    //cout << tdata<< " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
-
-                    //tdata = tdata + 1;
-                    if(tdata > 2){
-                        cout << "Warning!!: This data has noises " << endl;
-                        range_flag = true;
-                    }else{
-                        cout << tdata << " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
-                        av_count = av_count + 1;
-                        range_flag = false;
-                    }
+                    cout << tdata<< " "<< "x:" <<  tableXpoint[tdata] << "  y:" << tableYpoint[tdata] << endl;
                     tdata = tdata + 1;
+
+                    if(tdata > 3){
+                        cout << "Warning!!: This data has noise " << endl;
+                        range_flag = true;
+                    }
                 }
+                //waitKey(500);
             }
-
-            sum_A = sum_A + tableXpoint[0];
-            sum_B = sum_B + tableXpoint[1];
-            sum_C = sum_C + tableXpoint[2];
-
-            if(range_flag == false && av_count > 60){
-                average[0] = sum_A / (av_count / 3);
-                average[1] = sum_B / (av_count / 3);
-                average[2] = sum_C / (av_count / 3);
-
-                FRW::write("average.txt",average);
+            if(range_flag == false){
                 //FRW::write("tabledata.txt",tableXpoint);
-                FRW::send("average.txt");
+                //FRW::send("tabledata.txt");
                 cout << "Success!!" << endl;
                 flag = false;//true;
-                break;
             }
+            //pre_t = now_t;
             imshow("にゃーん", Dst);
-
-            //cout << -1.706*pow(average[0],2) + 52.846*average[0] + 34.989 << endl;
+            //waitKey(1000);
+            imwrite("a.jpeg",Dst);
+            //break;
         }
-
-            cout << -1.706*pow(average[0],2) + 52.846*average[0] + 34.989 << endl;
+        waitKey(500);
     }
     cout << "*----------Main finish-----------*" << endl;
     return 0;
