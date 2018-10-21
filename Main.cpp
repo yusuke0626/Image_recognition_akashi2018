@@ -218,7 +218,7 @@ int main(void) {
                 }else{
                     fixpram0 = 0;
                 }
-                origindata[0] = 0.00164797593 * average[0] * average[0] - 0.17064930501 * average[0] + 10.0003042452481 - ((average[0]-300)/25) - fixpram0;
+                origindata[0] = 10 * (0.00164797593 * average[0] * average[0] - 0.17064930501 * average[0] + 10.0003042452481 - ((average[0]-300)/25) - fixpram0 + 100);
                 cout << origindata[0]<< endl;
 
                 double fixpram1 = 0;
@@ -231,7 +231,7 @@ int main(void) {
                 }else{
                     fixpram1 = 0;
                 }
-                origindata[1] = 0.00164797593 * average[1] * average[1] - 0.17064930501 * average[1] + 10.0003042452481 - ((average[1]-300)/25) - fixpram1;
+                origindata[1] = 10 * (0.00164797593 * average[1] * average[1] - 0.17064930501 * average[1] + 10.0003042452481 - ((average[1]-300)/25) - fixpram1 + 100);
                 cout << origindata[1] << endl;
 
                 double fixpram2 = 0;
@@ -244,7 +244,7 @@ int main(void) {
                 }else{
                     fixpram2 = 0;
                 }
-                origindata[2] = 0.00164797593 * average[2] * average[2] - 0.17064930501 * average[2] + 10.0003042452481 - ((average[2]-300)/25) - fixpram2;
+                origindata[2] = 10 * (0.00164797593 * average[2] * average[2] - 0.17064930501 * average[2] + 10.0003042452481 - ((average[2]-300)/25) - fixpram2 + 100);
                 cout << origindata[2] << endl;
 
                 FRW::write("tabledata.txt",origindata);
