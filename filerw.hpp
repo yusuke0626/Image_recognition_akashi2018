@@ -68,15 +68,10 @@ namespace FRW{
             //cout << tabledata << endl;
             const char* num = tabledata.c_str();
             TablePlace[i] = atoi(num);
-            sendPlace[i] = TablePlace[i];
+            sendPlace[i] = -TablePlace[i];
             //cout << i << ":" <<TablePlace[i] << endl;
             i = i+1;
         }
-        a = sendPlace[0];
-        b = sendPlace[2];
-
-        sendPlace[0] = b;
-        sendPlace[2] = a;
         servefile.close();
         return 0;
     }
