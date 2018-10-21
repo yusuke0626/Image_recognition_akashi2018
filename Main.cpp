@@ -7,7 +7,7 @@
 #include <vector>
 #include "filerw.hpp"
 
-#define GET_RANGE 6000
+#define GET_RANGE 1000
 #define X_ORIGIN 80
 #define Y_ORIGIN 0
 #define X_SIZE 250
@@ -171,7 +171,7 @@ int main(void) {
             //座標
             for (int i = 1; i < nLab; ++i){
                 int *param = stats.ptr<int>(i);
-                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > GET_RANGE || param[ConnectedComponentsTypes::CC_STAT_LEFT] <=1000){
+                if(param[ConnectedComponentsTypes::CC_STAT_AREA] > GET_RANGE && param[ConnectedComponentsTypes::CC_STAT_LEFT] <=1000){
                     int x = param[ConnectedComponentsTypes::CC_STAT_LEFT];
                     int y = param[ConnectedComponentsTypes::CC_STAT_TOP];
                     int height = param[ConnectedComponentsTypes::CC_STAT_HEIGHT];
@@ -206,19 +206,55 @@ int main(void) {
                 average[1] = sum_B / (av_count / 3);
                 average[2] = sum_C / (av_count / 3);
 
-                FRW::write("average.txt",average);
-                //FRW::write("tabledata.txt",tableXpoint);
-                FRW::send("average.txt");
+                int origindata[3] = {};
+
+                double fixpram0 = 0;
+                if(average[0] < 40){
+                    fixpram0 = 4;
+                }else if(average[0] <= 40 && average[0] < 170){
+                    fixpram0 = average[0]*0.1286 - 11.8095;
+                }else if(average[0] <= 170){
+                    fixpram0 = -0.075*average[0] + 20.2;
+                }else{
+                    fixpram0 = 0;
+                }
+                origindata[0] = 0.00164797593 * average[0] * average[0] - 0.17064930501 * average[0] + 10.0003042452481 - ((average[0]-300)/25) - fixpram0;
+                cout << origindata[0]<< endl;
+
+                double fixpram1 = 0;
+                if(average[1] < 40){
+                    fixpram1 = 4;
+                }else if(average[1] <= 40 && average[1] < 170){
+                    fixpram1 = average[1]*0.1286 - 11.8095;
+                }else if(average[1] <= 170){
+                    fixpram1 = -0.075*average[1] + 20.2;
+                }else{
+                    fixpram1 = 0;
+                }
+                origindata[1] = 0.00164797593 * average[1] * average[1] - 0.17064930501 * average[1] + 10.0003042452481 - ((average[1]-300)/25) - fixpram1;
+                cout << origindata[1] << endl;
+
+                double fixpram2 = 0;
+                if(average[2] < 40){
+                    fixpram2 = 4;
+                }else if(average[2] <= 40 && average[2] < 170){
+                    fixpram2 = average[2]*0.1286 - 11.8095;
+                }else if(average[2] <= 170){
+                    fixpram2 = -0.075*average[2] + 20.2;
+                }else{
+                    fixpram2 = 0;
+                }
+                origindata[2] = 0.00164797593 * average[2] * average[2] - 0.17064930501 * average[2] + 10.0003042452481 - ((average[2]-300)/25) - fixpram2;
+                cout << origindata[2] << endl;
+
+                FRW::write("tabledata.txt",origindata);
+                FRW::send("tabledata.txt");
                 cout << "Success!!" << endl;
                 flag = false;//true;
                 break;
             }
             imshow("にゃーん", Dst);
-
-            //cout << -1.706*pow(average[0],2) + 52.846*average[0] + 34.989 << endl;
         }
-
-            cout << -1.706*pow(average[0],2) + 52.846*average[0] + 34.989 << endl;
     }
     cout << "*----------Main finish-----------*" << endl;
     return 0;
