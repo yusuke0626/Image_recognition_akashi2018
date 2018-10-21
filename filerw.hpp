@@ -70,6 +70,12 @@ namespace FRW{
             TablePlace[i] = atoi(num);
             sendPlace[i] = -TablePlace[i];
             //cout << i << ":" <<TablePlace[i] << endl;
+            a = sendPlace[0];
+            b = sendPlace[2];
+
+            sendPlace[0] = b;
+            sendPlace[2] = a;
+
             i = i+1;
         }
         servefile.close();
