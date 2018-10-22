@@ -22,7 +22,7 @@ namespace FRW{
 
     void send(string filename){
         string scp("sshpass -p 'a' scp ");
-        string adr(" pi@tapioka.local:/home/pi/Image_recognition_akashi2018");
+        string adr(" pi@tapioka.local:/home/pi/Image_recognition_akashi2018");//自動機のラズパイに合わせたやつが入ります。
         string putcommand = scp + filename + adr;
         const char* cstr = putcommand.c_str();
         system(cstr);
