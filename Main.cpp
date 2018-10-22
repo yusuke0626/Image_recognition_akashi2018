@@ -11,9 +11,9 @@
 #define X_ORIGIN 80
 #define Y_ORIGIN 0
 #define X_SIZE 230
-#define Y_SIZE 430
+#define Y_SIZE 395
 #define FRAME_X_SIZE 460
-#define FRAME_Y_SIZE 860
+#define FRAME_Y_SIZE 790
 
 using namespace cv;
 using namespace std;
@@ -56,6 +56,9 @@ int main(void) {
         cap >> frame;
         Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
         line(rsi, Point(0, 205), Point(400, 205), Scalar(200,100,100), 5, CV_AA);
+        line(rsi, Point(0, 395), Point(400, 215), Scalar(150,50,100), 5, CV_AA);
+        line(rsi, Point(0, 0), Point(400, 195), Scalar(150,50,100), 5, CV_AA);
+        line(rsi, Point(40, 0), Point(40, 430), Scalar(150,50,100), 5, CV_AA);
         resize(rsi, rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         imshow("img", rsi);
 
@@ -219,7 +222,7 @@ int main(void) {
                 }else{
                     fixpram0 = 0;
                 }
-                origindata[0] = 10 * (0.00164797593 * average[0] * average[0] - 0.17064930501 * average[0] + 10.0003042452481 - ((average[0]-300)/25) - fixpram0 + 100) + 250;
+                origindata[0] = 10 * (0.00164797593 * average[0] * average[0] - 0.17064930501 * average[0] + 10.0003042452481 /*- ((average[0]-300)/25)*/ - fixpram0 + 100) + 250;
                 cout << origindata[0]<< endl;
 
                 double fixpram1 = 0;
@@ -232,7 +235,7 @@ int main(void) {
                 }else{
                     fixpram1 = 0;
                 }
-                origindata[1] = 10 * (0.00164797593 * average[1] * average[1] - 0.17064930501 * average[1] + 10.0003042452481 - ((average[1]-300)/25) - fixpram1 + 100) + 250;
+                origindata[1] = 10 * (0.00164797593 * average[1] * average[1] - 0.17064930501 * average[1] + 10.0003042452481 /*- ((average[1]-300)/25) */- fixpram1 + 100) + 250;
                 cout << origindata[1] << endl;
 
                 double fixpram2 = 0;
@@ -245,7 +248,7 @@ int main(void) {
                 }else{
                     fixpram2 = 0;
                 }
-                origindata[2] = 10 * (0.00164797593 * average[2] * average[2] - 0.17064930501 * average[2] + 10.0003042452481 - ((average[2]-300)/25) - fixpram2 + 100) + 250;
+                origindata[2] = 10 * (0.00164797593 * average[2] * average[2] - 0.17064930501 * average[2] + 10.0003042452481 /*- ((average[2]-300)/25)*/ - fixpram2 + 100) + 250;
                 cout << origindata[2] << endl;
 
                 FRW::write("tabledata.txt",origindata);
