@@ -10,10 +10,10 @@
 #define GET_RANGE 1000
 #define X_ORIGIN 80
 #define Y_ORIGIN 0
-#define X_SIZE 250
-#define Y_SIZE 460
-#define FRAME_X_SIZE 500
-#define FRAME_Y_SIZE 920
+#define X_SIZE 230
+#define Y_SIZE 430
+#define FRAME_X_SIZE 460
+#define FRAME_Y_SIZE 860
 
 using namespace cv;
 using namespace std;
@@ -38,6 +38,7 @@ int main(void) {
     long int sum_B = 0;
     long int sum_C = 0;
     int average[3] = {};
+    Mat rec;
 
     VideoCapture cap(1);
     if(!cap.isOpened()){
@@ -54,7 +55,7 @@ int main(void) {
         cap >> img;
         cap >> frame;
         Mat rsi(img, Rect(X_ORIGIN, Y_ORIGIN, X_SIZE, Y_SIZE));
-        line(rsi, Point(0, 230), Point(400, 230), Scalar(200,100,100), 5, CV_AA);
+        line(rsi, Point(0, 205), Point(400, 205), Scalar(200,100,100), 5, CV_AA);
         resize(rsi, rsi, Size(FRAME_X_SIZE, FRAME_Y_SIZE));
         imshow("img", rsi);
 
@@ -218,7 +219,7 @@ int main(void) {
                 }else{
                     fixpram0 = 0;
                 }
-                origindata[0] = 10 * (0.00164797593 * average[0] * average[0] - 0.17064930501 * average[0] + 10.0003042452481 - ((average[0]-300)/25) - fixpram0 + 100);
+                origindata[0] = 10 * (0.00164797593 * average[0] * average[0] - 0.17064930501 * average[0] + 10.0003042452481 - ((average[0]-300)/25) - fixpram0 + 100) + 250;
                 cout << origindata[0]<< endl;
 
                 double fixpram1 = 0;
@@ -231,7 +232,7 @@ int main(void) {
                 }else{
                     fixpram1 = 0;
                 }
-                origindata[1] = 10 * (0.00164797593 * average[1] * average[1] - 0.17064930501 * average[1] + 10.0003042452481 - ((average[1]-300)/25) - fixpram1 + 100);
+                origindata[1] = 10 * (0.00164797593 * average[1] * average[1] - 0.17064930501 * average[1] + 10.0003042452481 - ((average[1]-300)/25) - fixpram1 + 100) + 250;
                 cout << origindata[1] << endl;
 
                 double fixpram2 = 0;
@@ -244,7 +245,7 @@ int main(void) {
                 }else{
                     fixpram2 = 0;
                 }
-                origindata[2] = 10 * (0.00164797593 * average[2] * average[2] - 0.17064930501 * average[2] + 10.0003042452481 - ((average[2]-300)/25) - fixpram2 + 100);
+                origindata[2] = 10 * (0.00164797593 * average[2] * average[2] - 0.17064930501 * average[2] + 10.0003042452481 - ((average[2]-300)/25) - fixpram2 + 100) + 250;
                 cout << origindata[2] << endl;
 
                 FRW::write("tabledata.txt",origindata);
@@ -256,6 +257,7 @@ int main(void) {
             imshow("にゃーん", Dst);
         }
     }
+
     cout << "*----------Main finish-----------*" << endl;
     return 0;
 }
