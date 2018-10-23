@@ -198,7 +198,7 @@ int main(void) {
             imwrite("a.jpeg",Dst);
             //break;
         }
-        waitKey(500);
+        //waitKey(500);
     }
     cout << "*----------Main finish-----------*" << endl;
     return 0;
